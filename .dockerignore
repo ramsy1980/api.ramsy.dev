@@ -3,3 +3,7 @@ build
 .dockerignore
 Dockerfile
 Dockerfile.prod
+.git/
+docs/
+dist/
+.env.secret

@@ -1,0 +1,14 @@
+---
+services:
+#api.ramsy.dev
+  api-ramsy-dev:
+    container_name: api-ramsy-dev
+    build: ./
+    volumes:
+      - '/node_modules'
+      - ./:/app
+    ports:
+      - 4000:4000
+    env_file:
+      - ./.env
+    restart: unless-stopped

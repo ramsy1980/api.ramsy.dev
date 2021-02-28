@@ -42,9 +42,22 @@ export const rules: RulesAndPermissions = {
     return { user: { id: session?.itemId } };
   },
   canReadPosts({ session }) {
-    // if (!isSignedIn({ session })) return false;
     if (permissions.canManagePosts({ session })) return true;
     // They should only see available products (based on the status field)
     return { status: 'PUBLISHED' };
+  },
+  canManageReactions({ session }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManagePosts({ session })) return true;
+
+    // 2. If not, do they own this item?
+    return { user: { id: session?.itemId } };
+  },
+  canManageComments({ session }) {
+    if (!isSignedIn({ session })) return false;
+    if (permissions.canManagePosts({ session })) return true;
+
+    // 2. If not, do they own this item?
+    return { user: { id: session?.itemId } };
   },
 };

@@ -43,6 +43,18 @@ export const User = list({
       ref: 'Post.user',
       many: true,
     }),
+    reactions: relationship({
+      ref: 'Reaction.user',
+      many: true,
+    }),
+    comments: relationship({
+      ref: 'Comment.user',
+      many: true,
+    }),
+    replies: relationship({
+      ref: 'Reply.user',
+      many: true,
+    }),
     createdAt: timestamp({
       access: { create: false, read: true, update: false },
       defaultValue: () => new Date().toISOString(),

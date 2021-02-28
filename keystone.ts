@@ -9,16 +9,15 @@ import { User } from './schemas/User';
 import { Role } from './schemas/Role';
 import { Post } from './schemas/Post';
 import { Tag } from './schemas/Tag';
+import { Reaction } from './schemas/Reaction';
+import { Comment } from './schemas/Comment';
+import { Reply } from './schemas/Reply';
+import { PostImage } from './schemas/PostImage';
 import { insertSeedData } from './seed-data';
 import { sendPasswordResetEmail } from './mail';
 import { permissionsList } from './schemas/fields';
-
-const databaseURL = process.env.DATABASE_URL || 'mongodb://localhost/keystone';
-
-const sessionConfig = {
-  maxAge: 60 * 60 * 24 * 360,
-  secret: process.env.COOKIE_SECRET || 'secret_not_set',
-};
+import { databaseURL, sessionConfig } from './config';
+import { extendGraphqlSchema } from './mutations';
 
 const { withAuth } = createAuth({
   listKey: 'User',
@@ -39,6 +38,7 @@ const { withAuth } = createAuth({
 export default withAuth(
   config({
     server: {
+      port: process.env.PORT || 3000,
       cors: {
         origin: [process.env.FRONTEND_URL],
         credentials: true,
@@ -57,12 +57,16 @@ export default withAuth(
     },
     lists: createSchema({
       // Schema items go in here
-      User,
-      Role,
+      Comment,
       Post,
-      Tag
+      PostImage,
+      Reaction,
+      Reply,
+      Role,
+      Tag,
+      User,
     }),
-    // extendGraphqlSchema,
+    extendGraphqlSchema,
     ui: {
       // Show the UI only for people who pass this test
       isAccessAllowed: ({ session }): boolean => session?.data,

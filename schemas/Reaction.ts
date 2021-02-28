@@ -1,46 +1,43 @@
-import { relationship, select, text, timestamp } from '@keystone-next/fields';
+import { relationship, select, timestamp } from '@keystone-next/fields';
 import { list } from '@keystone-next/keystone/schema';
 import { rules } from '../access';
 
-export const Post = list({
+export const Reaction = list({
   access: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    create: rules.canManagePosts,
-    read: rules.canReadPosts,
-    update: rules.canManagePosts,
-    delete: rules.canManagePosts,
+    create: rules.canManageReactions,
+    read: () => true,
+    update: rules.canManageReactions,
+    delete: rules.canManageReactions,
   },
   ui: {
-    hideCreate: (args) => !rules.canManagePosts(args),
-    hideDelete: (args) => !rules.canManagePosts(args),
-    isHidden: (args) => !rules.canManagePosts(args),
+    listView: {
+      initialColumns: ['posts', 'mood', 'user', 'createdAt'],
+    },
+    hideCreate: (args) => !rules.canManageReactions(args),
+    hideDelete: (args) => !rules.canManageReactions(args),
+    isHidden: (args) => !rules.canManageReactions(args),
   },
   fields: {
-    title: text({ isRequired: true }),
-    body: text({ isRequired: true, ui: { displayMode: 'textarea' } }),
-    status: select({
+    mood: select({
+      isRequired: true,
       options: [
-        { label: 'Draft', value: 'DRAFT' },
-        { label: 'Published', value: 'PUBLISHED' },
+        { label: '❤️', value: '❤️' },
+        { label: '👍', value: '👍' },
       ],
-      defaultValue: 'DRAFT',
+      defaultValue: '❤️',
       ui: {
         displayMode: 'segmented-control',
-        createView: { fieldMode: 'hidden' },
+        // createView: { fieldMode: 'hidden' },
+        // itemView: { fieldMode: 'hidden' },
       },
     }),
-    photo: relationship({
-      ref: 'PostImage.post',
-      ui: {
-        displayMode: 'cards',
-        cardFields: ['image', 'altText'],
-        inlineCreate: { fields: ['image', 'altText'] },
-        inlineEdit: { fields: ['image', 'altText'] },
-      },
+    posts: relationship({
+      ref: 'Post.reactions',
     }),
     user: relationship({
-      ref: 'User.posts',
+      ref: 'User.reactions',
       defaultValue: ({ context }) => ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         connect: { id: context.session.itemId },
@@ -50,18 +47,6 @@ export const Post = list({
         createView: { fieldMode: 'hidden' },
         itemView: { fieldMode: 'read' },
       },
-    }),
-    tags: relationship({
-      ref: 'Tag.posts',
-      many: true,
-    }),
-    reactions: relationship({
-      ref: 'Reaction.posts',
-      many: true,
-    }),
-    comments: relationship({
-      ref: 'Comment.posts',
-      many: true,
     }),
     createdAt: timestamp({
       access: { create: false, read: true, update: false },
