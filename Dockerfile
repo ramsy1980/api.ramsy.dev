@@ -1,16 +1,20 @@
-FROM node:alpine as build-deps
+ARG NODE_VERSION=14.15.4
+
+# Build container
+FROM node:${NODE_VERSION}-alpine AS build
 
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+RUN apk add --no-cache yarn vips-dev python3 build-base
+ADD . /app
+RUN yarn install --production && yarn cache clean
 
-COPY package*.json ./
-RUN npm install
+# Runtime container
+FROM node:${NODE_VERSION}-alpine
 
-# add app
-COPY . ./
+WORKDIR /app
 
-# start app
-EXPOSE 3000
-CMD ["npm", "run", "dev"]
+COPY --from=build /app /app
+
+EXPOSE 4000
+CMD ["yarn", "start"]

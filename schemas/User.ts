@@ -1,5 +1,9 @@
 import { list } from '@keystone-next/keystone/schema';
+<<<<<<< HEAD
 import { text, password, relationship } from '@keystone-next/fields';
+=======
+import { text, password, relationship, timestamp } from '@keystone-next/fields';
+>>>>>>> develop
 import { permissions, rules } from '../access';
 
 export const User = list({
@@ -37,6 +41,40 @@ export const User = list({
           fieldMode: (props) =>
             permissions.canManageUsers(props) ? 'edit' : 'read',
         },
+      },
+    }),
+    posts: relationship({
+      ref: 'Post.user',
+      many: true,
+    }),
+    reactions: relationship({
+      ref: 'Reaction.user',
+      many: true,
+    }),
+    comments: relationship({
+      ref: 'Comment.user',
+      many: true,
+    }),
+    replies: relationship({
+      ref: 'Reply.user',
+      many: true,
+    }),
+    createdAt: timestamp({
+      access: { create: false, read: true, update: false },
+      defaultValue: () => new Date().toISOString(),
+      ui: {
+        createView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'read' },
+      },
+    }),
+    updatedAt: timestamp({
+      access: { create: false, read: true, update: false },
+      hooks: {
+        resolveInput: () => new Date().toISOString(),
+      },
+      ui: {
+        createView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'read' },
       },
     }),
   },

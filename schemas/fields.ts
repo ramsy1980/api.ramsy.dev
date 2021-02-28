@@ -13,17 +13,13 @@ export const permissionFields = {
     defaultValue: false,
     label: 'User can CRUD roles',
   }),
-  canManageCapCodes: checkbox({
+  canManagePosts: checkbox({
     defaultValue: false,
-    label: 'User can see and manage CAP codes',
+    label: 'User can manage posts',
   }),
-  canManageProvinces: checkbox({
+  canManageTags: checkbox({
     defaultValue: false,
-    label: 'User can see and manage provinces',
-  }),
-  canManageSafetyRegions: checkbox({
-    defaultValue: false,
-    label: 'User can see and manage safety regions',
+    label: 'User can manage tags',
   }),
 };
 

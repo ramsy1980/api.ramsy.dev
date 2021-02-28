@@ -1,5 +1,5 @@
 {
-  "name": "p2000-backend",
+  "name": "api-ramsy-dev",
   "version": "1.0.0",
   "private": true,
   "author": "Ramsy de Vos",
@@ -48,8 +48,7 @@
     "next": "^10.0.5",
     "nodemailer": "^6.4.17",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "stripe": "^8.130.0"
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.9.0",
